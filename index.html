@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Перевозки | Межгород, аэропорт, трансферы</title>
+  <meta name="description" content="Пассажирские перевозки: межгород, аэропорт, корпоративные поездки. Комфортные автомобили, опытные водители, фиксированная цена.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-inner">
+      <a href="#" class="logo" aria-label="На главную">
+        <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="currentColor" d="M3 13h2l1 4h12l1-4h2l-2 7H5zM7 13l3-7h4l3 7zM8 18h8v2H8zM9 5h6v2H9z"/>
+        </svg>
+        <span>Перевозки</span>
+      </a>
+      <nav class="nav" aria-label="Основное меню">
+        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">Меню</button>
+        <ul id="nav-menu" class="nav-menu">
+          <li><a href="#services">Услуги</a></li>
+          <li><a href="#fleet">Автопарк</a></li>
+          <li><a href="#pricing">Тарифы</a></li>
+          <li><a href="#reviews">Отзывы</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#contacts">Контакты</a></li>
+        </ul>
+      </nav>
+      <a class="btn btn-primary tel-cta" href="tel:+375291234567">+375 (29) 123-45-67</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-inner">
+        <div class="hero-text">
+          <h1>Пассажирские перевозки и трансферы 24/7</h1>
+          <p>Межгород, аэропорт, корпоративные поездки. Комфортные авто, вежливые водители, фиксированная цена.</p>
+          <div class="hero-ctas">
+            <a class="btn btn-primary" href="tel:+375291234567">Позвонить</a>
+            <a class="btn btn-outline" href="https://wa.me/375291234567" target="_blank" rel="noopener">WhatsApp</a>
+            <a class="btn btn-outline" href="https://t.me/share/url?url=&text=Хочу%20заказать%20поездку" target="_blank" rel="noopener">Telegram</a>
+          </div>
+        </div>
+        <div class="hero-form">
+          <form id="quick-order" class="card">
+            <h2>Быстрый заказ</h2>
+            <label>
+              <span>Откуда</span>
+              <input type="text" name="from" required placeholder="Город, адрес">
+            </label>
+            <label>
+              <span>Куда</span>
+              <input type="text" name="to" required placeholder="Город, адрес">
+            </label>
+            <div class="row">
+              <label>
+                <span>Дата и время</span>
+                <input type="datetime-local" name="datetime">
+              </label>
+              <label>
+                <span>Пассажиры</span>
+                <input type="number" name="passengers" min="1" value="1">
+              </label>
+            </div>
+            <div class="row">
+              <label>
+                <span>Дистанция, км</span>
+                <input type="number" name="distance" min="1" placeholder="Напр. 120">
+              </label>
+              <label>
+                <span>Класс</span>
+                <select name="class">
+                  <option value="sedan">Седан</option>
+                  <option value="minivan">Минивэн</option>
+                  <option value="minibus">Микроавтобус</option>
+                </select>
+              </label>
+            </div>
+            <div class="calc">
+              <button type="button" id="calc-btn" class="btn btn-secondary">Рассчитать</button>
+              <output id="calc-result" aria-live="polite"></output>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Заказать</button>
+            <p class="muted">Онлайн-заявка без предоплаты. Мы перезвоним для подтверждения.</p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section id="services" class="section">
+      <div class="container">
+        <h2 class="section-title">Наши услуги</h2>
+        <div class="grid cards">
+          <article class="card service">
+            <div class="icon">
+              <svg viewBox="0 0 24 24"><path fill="currentColor" d="M3 11h18v2H3zM5 6h14v2H5zM7 16h10v2H7z"/></svg>
+            </div>
+            <h3>Межгород</h3>
+            <p>Поездки между городами по всей РБ и за её пределы.</p>
+          </article>
+          <article class="card service">
+            <div class="icon">
+              <svg viewBox="0 0 24 24"><path fill="currentColor" d="M3 12l9-9l9 9h-3v8h-12v-8z"/></svg>
+            </div>
+            <h3>Аэропорт</h3>
+            <p>Встречи с табличкой, отслеживание рейсов, помощь с багажом.</p>
+          </article>
+          <article class="card service">
+            <div class="icon">
+              <svg viewBox="0 0 24 24"><path fill="currentColor" d="M2 7h20v10H2zM4 9v6h16V9z"/></svg>
+            </div>
+            <h3>Корпоративные</h3>
+            <p>Счёт, договор, регулярные маршруты для компаний.</p>
+          </article>
+          <article class="card service">
+            <div class="icon">
+              <svg viewBox="0 0 24 24"><path fill="currentColor" d="M4 17h16v2H4zM5 7h14l-2 6H7z"/></svg>
+            </div>
+            <h3>Курьерские</h3>
+            <p>Доставка документов и посылок день-в-день.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="fleet" class="section alt">
+      <div class="container">
+        <h2 class="section-title">Автопарк</h2>
+        <div class="grid cards">
+          <article class="card">
+            <h3>Седан</h3>
+            <p>1–3 пассажира, багаж до 2 мест.</p>
+          </article>
+          <article class="card">
+            <h3>Минивэн</h3>
+            <p>до 6 пассажиров, просторный салон.</p>
+          </article>
+          <article class="card">
+            <h3>Микроавтобус</h3>
+            <p>до 8 пассажиров, большой багажный отсек.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing" class="section">
+      <div class="container">
+        <h2 class="section-title">Тарифы</h2>
+        <div class="grid cards">
+          <article class="card pricing">
+            <h3>Седан</h3>
+            <p class="price"><strong>0.60 BYN/км</strong></p>
+            <p>Минимальный заказ: 25 BYN</p>
+          </article>
+          <article class="card pricing">
+            <h3>Минивэн</h3>
+            <p class="price"><strong>0.75 BYN/км</strong></p>
+            <p>Минимальный заказ: 30 BYN</p>
+          </article>
+          <article class="card pricing">
+            <h3>Микроавтобус</h3>
+            <p class="price"><strong>0.95 BYN/км</strong></p>
+            <p>Минимальный заказ: 40 BYN</p>
+          </article>
+        </div>
+        <p class="muted center">Окончательная стоимость зависит от маршрута и времени ожидания.</p>
+      </div>
+    </section>
+
+    <section id="why" class="section alt">
+      <div class="container">
+        <h2 class="section-title">Почему мы</h2>
+        <div class="grid cards">
+          <article class="card small"><h3>Фиксированная цена</h3><p>Согласовываем заранее, без сюрпризов.</p></article>
+          <article class="card small"><h3>24/7</h3><p>Работаем круглосуточно, без выходных.</p></article>
+          <article class="card small"><h3>Безопасность</h3><p>Опытные водители и тех.осмотр.</p></article>
+          <article class="card small"><h3>Комфорт</h3><p>Чистые авто, кондиционер, Wi‑Fi.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="reviews" class="section">
+      <div class="container">
+        <h2 class="section-title">Отзывы</h2>
+        <div class="grid cards">
+          <article class="card"><p>Ехали Минск—Гродно, всё вовремя и комфортно. Рекомендую!</p><span class="muted">Наталья</span></article>
+          <article class="card"><p>Встретили в аэропорту с табличкой, помогли с багажом. Отличный сервис.</p><span class="muted">Андрей</span></article>
+          <article class="card"><p>Корпоративная перевозка на конференцию, чётко и по графику.</p><span class="muted">Мария</span></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="section alt">
+      <div class="container">
+        <h2 class="section-title">Частые вопросы</h2>
+        <details class="faq">
+          <summary>Как рассчитывается цена?</summary>
+          <p>По тарифу за км с учётом минимального заказа и ожидания.</p>
+        </details>
+        <details class="faq">
+          <summary>Как забронировать?</summary>
+          <p>Оставьте заявку через форму или позвоните. Мы перезвоним.</p>
+        </details>
+        <details class="faq">
+          <summary>Можно оплатить по безналу?</summary>
+          <p>Доступны наличные, карта, безнал для юр. лиц по договору.</p>
+        </details>
+      </div>
+    </section>
+
+    <section id="contacts" class="section">
+      <div class="container contacts">
+        <div>
+          <h2 class="section-title">Контакты</h2>
+          <ul class="contact-list">
+            <li><a href="tel:+375291234567">+375 (29) 123-45-67</a></li>
+            <li><a href="mailto:info@example.by">info@example.by</a></li>
+            <li><a href="https://wa.me/375291234567" target="_blank" rel="noopener">WhatsApp</a></li>
+            <li><a href="https://t.me/share/url?url=&text=Здравствуйте" target="_blank" rel="noopener">Telegram</a></li>
+          </ul>
+        </div>
+        <form id="contact-form" class="card">
+          <h3>Задайте вопрос</h3>
+          <label><span>Имя</span><input name="name" required></label>
+          <label><span>Телефон</span><input name="phone" required></label>
+          <label><span>Сообщение</span><textarea name="message" rows="3"></textarea></label>
+          <button type="submit" class="btn btn-primary btn-block">Отправить</button>
+          <p class="muted">Нажимая «Отправить», вы соглашаетесь с обработкой персональных данных.</p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <a href="#" class="logo">
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="currentColor" d="M3 13h2l1 4h12l1-4h2l-2 7H5zM7 13l3-7h4l3 7z"/>
+        </svg>
+        <span>Перевозки</span>
+      </a>
+      <p class="muted">© 2026 Перевозки. Все права защищены.</p>
+      <nav class="footer-nav">
+        <a href="#services">Услуги</a>
+        <a href="#pricing">Тарифы</a>
+        <a href="#contacts">Контакты</a>
+      </nav>
+    </div>
+  </footer>
+
+  <a href="tel:+375291234567" class="floating-call" aria-label="Позвонить">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8c1.4 2.7 3.6 4.9 6.3 6.3l2.1-2.1c.3-.3.7-.4 1.1-.3c1.2.4 2.5.6 3.9.6c.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.8 21 3 13.2 3 3c0-.6.4-1 1-1h2.7c.6 0 1 .4 1 1c0 1.3.2 2.6.6 3.9c.1.4 0 .8-.3 1.1z"/></svg>
+  </a>
+
+  <script src="./main.js"></script>
+</body>
+</html>
