@@ -1,4 +1,21 @@
 document.addEventListener('DOMContentLoaded',function(){
+  var themeBtns=document.querySelectorAll('.theme-btn')
+  function setActive(name){
+    themeBtns.forEach(function(b){b.classList.toggle('active',b.dataset.theme===name)})
+  }
+  function applyTheme(name){
+    if(name==='neon'){document.documentElement.removeAttribute('data-theme')}
+    else{document.documentElement.setAttribute('data-theme',name)}
+    localStorage.setItem('theme',name)
+    setActive(name)
+  }
+  if(themeBtns.length){
+    var saved=localStorage.getItem('theme')||'neon'
+    applyTheme(saved)
+    themeBtns.forEach(function(btn){
+      btn.addEventListener('click',function(){applyTheme(btn.dataset.theme)})
+    })
+  }
   var toggle=document.querySelector('.nav-toggle')
   var menu=document.getElementById('nav-menu')
   if(toggle&&menu){
