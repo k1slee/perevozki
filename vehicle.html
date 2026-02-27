@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Автомобиль | Свадебные перевозки</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-inner">
+      <a href="./" class="logo"><svg width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M3 13h2l1 4h12l1-4h2l-2 7H5zM7 13l3-7h4l3 7z"/></svg><span>Перевозки</span></a>
+      <nav class="nav"><button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">Меню</button><ul id="nav-menu" class="nav-menu"><li><a href="./fleet.html">Автопарк</a></li><li><a href="./#gallery">Галерея</a></li><li><a href="./#contacts">Контакты</a></li></ul></nav>
+      <a class="btn btn-primary tel-cta" href="tel:+375291234567">+375 (29) 123-45-67</a>
+    </div>
+  </header>
+  <main>
+    <section class="section">
+      <div class="container">
+        <div id="v-hero" class="card" style="padding:0;overflow:hidden"></div>
+        <h1 id="v-name" class="section-title" style="margin-top:16px"></h1>
+        <p id="v-desc" class="muted"></p>
+        <div id="v-specs" class="grid cards" style="margin-top:12px"></div>
+        <h2 class="section-title" style="margin-top:28px">Пакеты</h2>
+        <div id="v-packages" class="grid cards"></div>
+        <h2 class="section-title" style="margin-top:28px">Фотографии</h2>
+        <div id="v-gallery" class="gallery-grid"></div>
+      </div>
+    </section>
+  </main>
+  <div id="lightbox" class="lightbox" aria-hidden="true"><button class="lightbox-close" aria-label="Закрыть">×</button><button class="lightbox-prev" aria-label="Предыдущая">‹</button><img class="lightbox-img" alt=""><button class="lightbox-next" aria-label="Следующая">›</button></div>
+  <script>
+  ;(function(){
+    function q(name){var m=location.search.match(new RegExp('[?&]'+name+'=([^&]+)'));return m?decodeURIComponent(m[1]):''}
+    var slug=q('slug')
+    if(!slug){location.href='fleet.html';return}
+    fetch('api/vehicles/'+encodeURIComponent(slug)).then(function(r){return r.ok?r.json():fetch('data/vehicles.json').then(function(x){return x.json()}).then(function(list){return list.find(function(i){return i.slug===slug})||{}})}).then(function(v){
+      if(!v||!v.slug){location.href='fleet.html';return}
+      document.title=v.name+' | Автопарк'
+      var hero=document.getElementById('v-hero')
+      var img=''
+      if(v.images&&v.images.length){
+        var ci=(typeof v.coverIndex==='number' && v.coverIndex>=0 && v.coverIndex<v.images.length)?v.coverIndex:0
+        img=v.images[ci]
+      }
+      hero.innerHTML=img?'<img src="'+img+'" alt="'+v.name+'" style="width:100%;height:420px;object-fit:cover">':''
+      document.getElementById('v-name').textContent=v.name
+      document.getElementById('v-desc').textContent=v.description||''
+      var specs=document.getElementById('v-specs')
+      specs.innerHTML='<div class="card"><strong>'+ (v.class||'') +'</strong><p class="muted">Класс</p></div><div class="card"><strong>'+ (v.seats||'-') +'</strong><p class="muted">Места</p></div><div class="card"><strong>'+ (v.pricePerHour||'-') +' BYN/час</strong><p class="muted">Тариф</p></div><div class="card"><strong>'+ (v.minHours||'-') +' ч</strong><p class="muted">Минимум</p></div>'
+      var pk=document.getElementById('v-packages')
+      if(Array.isArray(v.packages)&&v.packages.length){
+        v.packages.forEach(function(p){
+          var d=document.createElement('div');d.className='card'
+          d.innerHTML='<h3>'+p.hours+' ч</h3><p class="price"><strong>'+p.price+' BYN</strong></p><p class="muted">Финальная цена может зависеть от маршрута и ожиданий</p>'
+          pk.appendChild(d)
+        })
+      } else {
+        pk.innerHTML='<div class="card"><p class="muted">Пакеты уточняйте при бронировании</p></div>'
+      }
+      var gal=document.getElementById('v-gallery')
+      ;(v.images||[]).forEach(function(src){
+        var f=document.createElement('figure');f.className='gallery-item';var i=document.createElement('img');i.src=src;i.alt=v.name;f.appendChild(i);gal.appendChild(f)
+      })
+      var lb=document.getElementById('lightbox'),lbImg=lb.querySelector('.lightbox-img'),prev=lb.querySelector('.lightbox-prev'),next=lb.querySelector('.lightbox-next'),close=lb.querySelector('.lightbox-close'),imgs=[].slice.call(gal.querySelectorAll('img'));var cur=-1
+      function open(i){cur=i;lbImg.src=imgs[i].src;lb.classList.add('open');lb.setAttribute('aria-hidden','false')}
+      function hide(){lb.classList.remove('open');lb.setAttribute('aria-hidden','true')}
+      function show(d){if(!imgs.length)return;cur=(cur+d+imgs.length)%imgs.length;lbImg.src=imgs[cur].src}
+      imgs.forEach(function(im,i){im.addEventListener('click',function(){open(i)})})
+      close.addEventListener('click',hide);prev.addEventListener('click',function(){show(-1)});next.addEventListener('click',function(){show(1)});lb.addEventListener('click',function(e){if(e.target===lb)hide()});document.addEventListener('keydown',function(e){if(!lb.classList.contains('open'))return;if(e.key==='Escape')hide();if(e.key==='ArrowRight')show(1);if(e.key==='ArrowLeft')show(-1)})
+    })
+  })()
+  </script>
+</body>
+</html>

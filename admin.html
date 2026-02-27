@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Админ-панель | Автопарк</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-inner">
+      <a href="./" class="logo"><svg width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M3 13h2l1 4h12l1-4h2l-2 7H5zM7 13l3-7h4l3 7z"/></svg><span>Перевозки</span></a>
+      <nav class="nav"><button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">Меню</button><ul id="nav-menu" class="nav-menu"><li><a href="./fleet.html">Автопарк</a></li><li><a href="./#gallery">Галерея</a></li></ul></nav>
+    </div>
+  </header>
+  <main>
+    <section class="section">
+      <div class="container">
+        <h1 class="section-title">Добавить автомобиль</h1>
+        <form id="add-form" class="card">
+          <div class="row"><label><span>Название</span><input name="name" required></label><label><span>Слаг</span><input name="slug" required placeholder="например: sedan-c-class"></label></div>
+          <div class="row"><label><span>Класс</span><select name="class"><option value="sedan">sedan</option><option value="minivan">minivan</option><option value="minibus">minibus</option></select></label><label><span>Места</span><input type="number" name="seats" min="1" required></label></div>
+          <div class="row"><label><span>Тариф, BYN/час</span><input type="number" name="pricePerHour" min="0" required></label><label><span>Минимум часов</span><input type="number" name="minHours" min="1" required></label></div>
+          <label><span>Описание</span><textarea name="description" rows="3"></textarea></label>
+          <label><span>Изображения (URL через запятую)</span><input name="images" placeholder="images/gallery/sedan-1.jpg, images/gallery/wedding-roses.jpg"></label>
+          <button class="btn btn-primary btn-block" type="submit">Сохранить</button>
+        </form>
+        <h2 class="section-title" style="margin-top:28px">Загрузка файлов</h2>
+        <form id="upload-form" class="card">
+          <div class="row"><label><span>Слаг</span><input name="slug" required></label><label><span>Файлы</span><input type="file" name="files" multiple></label></div>
+          <button class="btn btn-secondary btn-block" type="submit">Загрузить</button>
+          <p class="muted" id="upload-result"></p>
+        </form>
+        <h2 class="section-title" style="margin-top:28px">Текущий автопарк</h2>
+        <div id="list" class="grid cards"></div>
+        <p><button id="logout" class="btn">Выйти</button></p>
+        <h2 class="section-title" style="margin-top:28px">Галерея сайта</h2>
+        <div class="card">
+          <div class="row"><label><span>Загрузить фото в галерею</span><input id="gallery-files" type="file" multiple></label></div>
+          <div id="site-gallery" class="grid" style="grid-template-columns:repeat(6,1fr);gap:12px;margin-top:12px"></div>
+          <div class="row" style="margin-top:8px"><button id="gallery-save" class="btn btn-primary">Сохранить галерею</button></div>
+          <p class="muted" id="gallery-status"></p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script>
+  ;(function(){
+    var add=document.getElementById('add-form')
+    add.addEventListener('submit',function(e){
+      e.preventDefault()
+      var d=new FormData(add)
+      var payload={
+        name:d.get('name'),
+        slug:d.get('slug'),
+        class:d.get('class'),
+        seats:parseInt(d.get('seats')||'0',10),
+        pricePerHour:parseFloat(d.get('pricePerHour')||'0'),
+        minHours:parseInt(d.get('minHours')||'0',10),
+        description:d.get('description')||'',
+        images:(d.get('images')||'').split(',').map(function(s){return s.trim()}).filter(Boolean)
+      }
+      fetch('/api/vehicles',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(function(r){return r.json().then(function(j){return {ok:r.ok,body:j}})}).then(function(res){
+        if(res.ok){alert('Сохранено');add.reset()}
+        else{alert('Ошибка: '+(res.body&&res.body.error||'unknown'))}
+      }).catch(function(){alert('Ошибка сети')})
+    })
+    var up=document.getElementById('upload-form')
+    var ures=document.getElementById('upload-result')
+    up.addEventListener('submit',function(e){
+      e.preventDefault()
+      var d=new FormData(up)
+      fetch('/api/upload',{method:'POST',body:d}).then(function(r){return r.json()}).then(function(j){
+        if(j.ok){ures.textContent='Загружено: '+(j.paths||[]).join(', ')}
+        else{ures.textContent='Ошибка: '+(j.error||'unknown')}
+      }).catch(function(){ures.textContent='Ошибка сети'})
+    })
+    function makeThumb(src,isCover){
+      var div=document.createElement('div')
+      div.className='card'
+      div.style.padding='8px'
+      div.style.cursor='grab'
+      div.setAttribute('draggable','true')
+      div.innerHTML='<img src="'+src+'" alt="" style="width:100%;height:120px;object-fit:cover;border-radius:8px"><div style="margin-top:6px;display:flex;gap:8px"><button class="btn" data-act="cover">'+(isCover?'Обложка':'Сделать обложкой')+'</button><button class="btn" data-act="remove">Убрать</button></div>'
+      if(isCover) div.classList.add('is-cover')
+      return div
+    }
+    function parsePackages(text){
+      // формат "3:105;5:175;7:245"
+      var arr=[]
+      text.split(';').map(function(t){return t.trim()}).filter(Boolean).forEach(function(pair){
+        var p=pair.split(':');var h=parseInt((p[0]||'').trim(),10);var pr=parseFloat((p[1]||'').trim());if(!isNaN(h)&&!isNaN(pr)) arr.push({hours:h,price:pr})
+      })
+      return arr
+    }
+    function serializePackages(list){
+      return (list||[]).map(function(p){return p.hours+':'+p.price}).join(';')
+    }
+    function enableDnD(container){
+      var dragged=null
+      container.addEventListener('dragstart',function(e){dragged=e.target.closest('.card');if(dragged){e.dataTransfer.effectAllowed='move'}})
+      container.addEventListener('dragover',function(e){e.preventDefault();var t=e.target.closest('.card');if(!t||t===dragged)return;var rect=t.getBoundingClientRect();var next=(e.clientY-rect.top)/(rect.bottom-rect.top)>0.5;t.parentNode.insertBefore(dragged, next?t.nextSibling:t)})
+      container.addEventListener('drop',function(e){e.preventDefault()})
+    }
+    function loadList(){
+      fetch('/api/vehicles').then(function(r){return r.json()}).then(function(list){
+        var wrap=document.getElementById('list');wrap.innerHTML=''
+        list.forEach(function(v){
+          var d=document.createElement('div');d.className='card'
+          d.innerHTML='<h3>'+v.name+'</h3><p class="muted">'+v.slug+'</p>'
+            +'<div class="row"><label><span>Имя</span><input value="'+v.name+'" data-k="name"></label><label><span>Тариф</span><input value="'+v.pricePerHour+'" data-k="pricePerHour" type="number"></label></div>'
+            +'<div class="row"><label><span>Места</span><input value="'+(v.seats||'')+'" data-k="seats" type="number"></label><label><span>Мин. часы</span><input value="'+(v.minHours||'')+'" data-k="minHours" type="number"></label></div>'
+            +'<label><span>Описание</span><textarea data-k="description">'+(v.description||'')+'</textarea></label>'
+            +'<label><span>Пакеты (часы:цена;...)</span><input data-k="packagesText" value="'+serializePackages(v.packages||[])+'"></label>'
+            +'<div class="row"><label><span>Добавить фото</span><input type="file" data-files multiple></label></div>'
+            +'<div class="grid" style="grid-template-columns:repeat(4,1fr);gap:12px" data-thumbs></div>'
+            +'<div class="row" style="margin-top:8px"><button class="btn btn-primary" data-act="save">Сохранить</button><button class="btn" data-act="delete">Удалить</button><a class="btn" href="vehicle.html?slug='+v.slug+'" target="_blank">Открыть</a></div>'
+          var thumbs=d.querySelector('[data-thumbs]')
+          var imgs=(v.images||[])
+          imgs.forEach(function(src,idx){thumbs.appendChild(makeThumb(src, (typeof v.coverIndex==='number'?v.coverIndex:0)===idx))})
+          enableDnD(thumbs)
+          var fileInput=d.querySelector('[data-files]')
+          fileInput.addEventListener('change',function(){
+            if(!fileInput.files.length) return
+            var fd=new FormData(); fd.append('slug', v.slug)
+            ;[].slice.call(fileInput.files).forEach(function(f){fd.append('files',f)})
+            fetch('/api/upload',{method:'POST',body:fd}).then(function(r){return r.json()}).then(function(j){
+              if(j.ok && Array.isArray(j.paths)){
+                j.paths.forEach(function(p){thumbs.appendChild(makeThumb(p,false))})
+                var arr=[]; var coverIdx=0
+                ;[].slice.call(thumbs.children).forEach(function(c,i){
+                  var src=c.querySelector('img').getAttribute('src'); arr.push(src); if(c.classList.contains('is-cover')) coverIdx=i
+                })
+                var payload={images:arr, coverIndex:coverIdx}
+                fetch('/api/vehicles/'+v.slug,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+              }
+              fileInput.value=''
+            })
+          })
+          thumbs.addEventListener('click',function(e){
+            var card=e.target.closest('.card'); if(!card) return
+            if(e.target&&e.target.getAttribute('data-act')==='remove'){card.parentNode.removeChild(card)}
+            if(e.target&&e.target.getAttribute('data-act')==='cover'){
+              ;[].slice.call(thumbs.children).forEach(function(c){c.classList.remove('is-cover'); c.querySelector('[data-act="cover"]').textContent='Сделать обложкой'})
+              card.classList.add('is-cover'); e.target.textContent='Обложка'
+            }
+          })
+          d.querySelector('[data-act="save"]').addEventListener('click',function(){
+            var payload={}
+            ;[].slice.call(d.querySelectorAll('[data-k]')).forEach(function(inp){
+              var k=inp.getAttribute('data-k');var val=inp.value
+              if(k==='pricePerHour'||k==='seats'||k==='minHours'){val=parseFloat(val)}
+              payload[k]=val
+            })
+            // Пакеты
+            payload['packages']=parsePackages(payload['packagesText']||'')
+            delete payload['packagesText']
+            // Изображения и обложка
+            var arr=[]; var coverIdx=0
+            ;[].slice.call(thumbs.children).forEach(function(c,i){
+              var src=c.querySelector('img').getAttribute('src'); arr.push(src); if(c.classList.contains('is-cover')) coverIdx=i
+            })
+            payload['images']=arr
+            payload['coverIndex']=coverIdx
+            fetch('/api/vehicles/'+v.slug,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(function(r){return r.json()}).then(function(){loadList()})
+          })
+          d.querySelector('[data-act="delete"]').addEventListener('click',function(){
+            if(!confirm('Удалить '+v.name+'?')) return
+            fetch('/api/vehicles/'+v.slug,{method:'DELETE'}).then(function(){loadList()})
+          })
+          wrap.appendChild(d)
+        })
+      })
+    }
+    loadList()
+    document.getElementById('logout').addEventListener('click',function(){
+      fetch('/admin/logout',{method:'POST'}).then(function(){location.href='/login.html'})
+    })
+    var sg=document.getElementById('site-gallery')
+    var sgStatus=document.getElementById('gallery-status')
+    function sgMake(src){
+      var d=document.createElement('div'); d.className='card'; d.style.padding='8px'
+      d.setAttribute('draggable','true')
+      d.innerHTML='<img src="'+src+'" alt="" style="width:100%;height:96px;object-fit:cover;border-radius:8px"><div style="margin-top:6px"><button class="btn" data-act="remove">Удалить</button></div>'
+      return d
+    }
+    function sgBind(){
+      var dragged=null
+      sg.addEventListener('dragstart',function(e){dragged=e.target.closest('.card')})
+      sg.addEventListener('dragover',function(e){e.preventDefault();var t=e.target.closest('.card');if(!t||t===dragged)return;var rect=t.getBoundingClientRect();var next=(e.clientY-rect.top)/(rect.bottom-rect.top)>0.5;t.parentNode.insertBefore(dragged, next?t.nextSibling:t)})
+      sg.addEventListener('drop',function(e){e.preventDefault()})
+      sg.addEventListener('click',function(e){if(e.target&&e.target.getAttribute('data-act')==='remove'){var c=e.target.closest('.card'); if(c) c.remove()}})
+    }
+    function sgLoad(){
+      fetch('/api/gallery',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(list){
+        sg.innerHTML=''; (list||[]).forEach(function(src){sg.appendChild(sgMake(src))})
+      })
+    }
+    sgBind(); sgLoad()
+    document.getElementById('gallery-files').addEventListener('change',function(e){
+      var input=e.target; if(!input.files.length) return
+      var fd=new FormData(); [].slice.call(input.files).forEach(function(f){fd.append('files',f)})
+      fetch('/api/upload-gallery',{method:'POST',body:fd}).then(function(r){return r.json()}).then(function(j){
+        if(j.ok && Array.isArray(j.paths)){ j.paths.forEach(function(p){ sg.appendChild(sgMake(p)) }) ; sgStatus.textContent='Загружено: '+j.paths.length }
+        input.value=''
+      })
+    })
+    document.getElementById('gallery-save').addEventListener('click',function(){
+      var arr=[].slice.call(sg.children).map(function(c){ return c.querySelector('img').getAttribute('src') })
+      fetch('/api/gallery',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({images:arr})}).then(function(r){return r.json()}).then(function(j){
+        sgStatus.textContent=j.ok?'Сохранено':'Ошибка'
+      })
+    })
+  })()
+  </script>
+</body>
+</html>

@@ -23,17 +23,17 @@
         <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">Меню</button>
         <ul id="nav-menu" class="nav-menu">
           <li><a href="#services">Услуги</a></li>
-          <li><a href="#fleet">Автопарк</a></li>
+          <li><a href="./fleet.html">Автопарк</a></li>
           <li><a href="#pricing">Тарифы</a></li>
+          <li><a href="#gallery">Галерея</a></li>
           <li><a href="#reviews">Отзывы</a></li>
           <li><a href="#faq">FAQ</a></li>
           <li><a href="#contacts">Контакты</a></li>
         </ul>
       </nav>
       <div class="theme-switch" aria-label="Выбор темы">
-        <button class="theme-btn" data-theme="neon">Неон</button>
         <button class="theme-btn" data-theme="light">Светлый</button>
-        <button class="theme-btn" data-theme="ocean">Океан</button>
+        <button class="theme-btn" data-theme="festive">Праздничный</button>
       </div>
       <a class="btn btn-primary tel-cta" href="tel:+375291234567">+375 (29) 123-45-67</a>
     </div>
@@ -43,8 +43,8 @@
     <section class="hero">
       <div class="container hero-inner">
         <div class="hero-text">
-          <h1>Пассажирские перевозки и трансферы 24/7</h1>
-          <p>Межгород, аэропорт, корпоративные поездки. Комфортные авто, вежливые водители, фиксированная цена.</p>
+          <h1>Свадебные перевозки и кортежи 24/7</h1>
+          <p>Белые автомобили бизнес‑класса для молодожёнов и гостей. Подача к ЗАГС, фотосессии, трансфер на банкет — всё по графику и без спешки.</p>
           <div class="hero-ctas">
             <a class="btn btn-primary" href="tel:+375291234567">Позвонить</a>
             <a class="btn btn-outline" href="https://wa.me/375291234567" target="_blank" rel="noopener">WhatsApp</a>
@@ -53,7 +53,7 @@
         </div>
         <div class="hero-form">
           <form id="quick-order" class="card">
-            <h2>Быстрый заказ</h2>
+            <h2>Заявка на свадьбу</h2>
             <label>
               <span>Откуда</span>
               <input type="text" name="from" required placeholder="Город, адрес">
@@ -74,8 +74,8 @@
             </div>
             <div class="row">
               <label>
-                <span>Дистанция, км</span>
-                <input type="number" name="distance" min="1" placeholder="Напр. 120">
+                <span>Часы аренды</span>
+                <input type="number" name="hours" min="1" placeholder="Напр. 5">
               </label>
               <label>
                 <span>Класс</span>
@@ -99,35 +99,35 @@
 
     <section id="services" class="section">
       <div class="container">
-        <h2 class="section-title">Наши услуги</h2>
+        <h2 class="section-title">Услуги для свадьбы</h2>
         <div class="grid cards">
           <article class="card service">
             <div class="icon">
               <svg viewBox="0 0 24 24"><path fill="currentColor" d="M3 11h18v2H3zM5 6h14v2H5zM7 16h10v2H7z"/></svg>
             </div>
-            <h3>Межгород</h3>
-            <p>Поездки между городами по всей РБ и за её пределы.</p>
+            <h3>Кортеж молодожёнов</h3>
+            <p>Подача к дому, ЗАГС, фотосессия, банкет. Водитель держит тайминг.</p>
           </article>
           <article class="card service">
             <div class="icon">
               <svg viewBox="0 0 24 24"><path fill="currentColor" d="M3 12l9-9l9 9h-3v8h-12v-8z"/></svg>
             </div>
-            <h3>Аэропорт</h3>
-            <p>Встречи с табличкой, отслеживание рейсов, помощь с багажом.</p>
+            <h3>Трансфер гостей</h3>
+            <p>Минивэны и микроавтобусы: развезём гостей по адресам после торжества.</p>
           </article>
           <article class="card service">
             <div class="icon">
               <svg viewBox="0 0 24 24"><path fill="currentColor" d="M2 7h20v10H2zM4 9v6h16V9z"/></svg>
             </div>
-            <h3>Корпоративные</h3>
-            <p>Счёт, договор, регулярные маршруты для компаний.</p>
+            <h3>Почасовая аренда</h3>
+            <p>Удобно для маршрутов с остановками и фотосессиями в разных локациях.</p>
           </article>
           <article class="card service">
             <div class="icon">
               <svg viewBox="0 0 24 24"><path fill="currentColor" d="M4 17h16v2H4zM5 7h14l-2 6H7z"/></svg>
             </div>
-            <h3>Курьерские</h3>
-            <p>Доставка документов и посылок день-в-день.</p>
+            <h3>Украшение авто</h3>
+            <p>Акуратный декор под стиль свадьбы или установка вашего украшения.</p>
           </article>
         </div>
       </div>
@@ -135,19 +135,22 @@
 
     <section id="fleet" class="section alt">
       <div class="container">
-        <h2 class="section-title">Автопарк</h2>
+        <h2 class="section-title">Кортеж и транспорт</h2>
         <div class="grid cards">
           <article class="card">
-            <h3>Седан</h3>
-            <p>1–3 пассажира, багаж до 2 мест.</p>
+            <h3>Седан для молодожёнов</h3>
+            <p>Белый бизнес‑класс, 1–3 пассажира. Чистый салон, вежливый водитель.</p>
+            <p><a class="btn" href="./fleet.html">Смотреть автопарк</a></p>
           </article>
           <article class="card">
-            <h3>Минивэн</h3>
-            <p>до 6 пассажиров, просторный салон.</p>
+            <h3>Минивэн для близких</h3>
+            <p>До 6 пассажиров — родители, свидетели, фотограф.</p>
+            <p><a class="btn" href="./fleet.html">Смотреть автопарк</a></p>
           </article>
           <article class="card">
-            <h3>Микроавтобус</h3>
-            <p>до 8 пассажиров, большой багажный отсек.</p>
+            <h3>Микроавтобус для гостей</h3>
+            <p>До 8–18 пассажиров, удобно на трансфер церемония ↔ банкет.</p>
+            <p><a class="btn" href="./fleet.html">Смотреть автопарк</a></p>
           </article>
         </div>
       </div>
@@ -155,25 +158,25 @@
 
     <section id="pricing" class="section">
       <div class="container">
-        <h2 class="section-title">Тарифы</h2>
+        <h2 class="section-title">Пакеты и тарифы</h2>
         <div class="grid cards">
           <article class="card pricing">
             <h3>Седан</h3>
-            <p class="price"><strong>0.60 BYN/км</strong></p>
-            <p>Минимальный заказ: 25 BYN</p>
+            <p class="price"><strong>от 35 BYN/час</strong></p>
+            <p>Минимальный заказ: 3 часа</p>
           </article>
           <article class="card pricing">
             <h3>Минивэн</h3>
-            <p class="price"><strong>0.75 BYN/км</strong></p>
-            <p>Минимальный заказ: 30 BYN</p>
+            <p class="price"><strong>от 45 BYN/час</strong></p>
+            <p>Минимальный заказ: 3 часа</p>
           </article>
           <article class="card pricing">
             <h3>Микроавтобус</h3>
-            <p class="price"><strong>0.95 BYN/км</strong></p>
-            <p>Минимальный заказ: 40 BYN</p>
+            <p class="price"><strong>от 55 BYN/час</strong></p>
+            <p>Минимальный заказ: 4 часа</p>
           </article>
         </div>
-        <p class="muted center">Окончательная стоимость зависит от маршрута и времени ожидания.</p>
+        <p class="muted center">Стоимость зависит от класса авто, продолжительности и маршрута. Уточняйте финальную цену при подтверждении.</p>
       </div>
     </section>
 
@@ -181,11 +184,19 @@
       <div class="container">
         <h2 class="section-title">Почему мы</h2>
         <div class="grid cards">
-          <article class="card small"><h3>Фиксированная цена</h3><p>Согласовываем заранее, без сюрпризов.</p></article>
-          <article class="card small"><h3>24/7</h3><p>Работаем круглосуточно, без выходных.</p></article>
-          <article class="card small"><h3>Безопасность</h3><p>Опытные водители и тех.осмотр.</p></article>
-          <article class="card small"><h3>Комфорт</h3><p>Чистые авто, кондиционер, Wi‑Fi.</p></article>
+          <article class="card small"><h3>Ритм свадьбы</h3><p>Работаем по таймингу, предусмотрим остановки для фото.</p></article>
+          <article class="card small"><h3>Белый автопарк</h3><p>Седаны/минивэны/микроавтобусы под стиль торжества.</p></article>
+          <article class="card small"><h3>Акуратный декор</h3><p>Ставим украшения бережно, ничего лишнего.</p></article>
+          <article class="card small"><h3>Комфорт и безопасность</h3><p>Чистые авто, кондиционер, опытные водители.</p></article>
         </div>
+      </div>
+    </section>
+
+    <section id="gallery" class="section alt">
+      <div class="container">
+        <h2 class="section-title">Галерея</h2>
+        <p class="muted" style="margin-bottom:12px">Реальные фото наших автомобилей на мероприятиях и рейсах.</p>
+        <div id="home-gallery" class="gallery-grid"></div>
       </div>
     </section>
 
@@ -205,15 +216,15 @@
         <h2 class="section-title">Частые вопросы</h2>
         <details class="faq">
           <summary>Как рассчитывается цена?</summary>
-          <p>По тарифу за км с учётом минимального заказа и ожидания.</p>
+          <p>Почасовой тариф по классу авто + минимальное количество часов. Декор, встреча гостей и дополнительные остановки обсуждаем заранее.</p>
         </details>
         <details class="faq">
           <summary>Как забронировать?</summary>
-          <p>Оставьте заявку через форму или позвоните. Мы перезвоним.</p>
+          <p>Оставьте заявку на сайте или позвоните. Закрепляем время и маршрут, согласовываем декор и количество машин.</p>
         </details>
         <details class="faq">
-          <summary>Можно оплатить по безналу?</summary>
-          <p>Доступны наличные, карта, безнал для юр. лиц по договору.</p>
+          <summary>Варианты оплаты</summary>
+          <p>Наличными, картой, для юр. лиц — безнал по договору.</p>
         </details>
       </div>
     </section>
@@ -262,6 +273,30 @@
     <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8c1.4 2.7 3.6 4.9 6.3 6.3l2.1-2.1c.3-.3.7-.4 1.1-.3c1.2.4 2.5.6 3.9.6c.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.8 21 3 13.2 3 3c0-.6.4-1 1-1h2.7c.6 0 1 .4 1 1c0 1.3.2 2.6.6 3.9c.1.4 0 .8-.3 1.1z"/></svg>
   </a>
 
+  <div id="lightbox" class="lightbox" aria-hidden="true">
+    <button class="lightbox-close" aria-label="Закрыть">×</button>
+    <button class="lightbox-prev" aria-label="Предыдущая">‹</button>
+    <img class="lightbox-img" alt="">
+    <button class="lightbox-next" aria-label="Следующая">›</button>
+  </div>
+
   <script src="./main.js"></script>
+  <script>
+  ;(function(){
+    var box=document.getElementById('home-gallery')
+    if(!box) return
+    fetch('/api/gallery',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(list){
+      box.innerHTML=''
+      ;(list||[]).forEach(function(src,i){
+        var f=document.createElement('figure');f.className='gallery-item'
+        if(i%7===1||i%11===3) f.classList.add('wide')
+        if(i%9===2) f.classList.add('tall')
+        var img=document.createElement('img');img.setAttribute('loading','lazy');img.setAttribute('alt','Галерея');img.setAttribute('data-src',src)
+        f.appendChild(img);box.appendChild(f)
+      })
+      document.dispatchEvent(new CustomEvent('gallery:updated'))
+    })
+  })()
+  </script>
 </body>
 </html>

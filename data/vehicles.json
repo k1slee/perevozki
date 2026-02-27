@@ -1,0 +1,31 @@
+[
+  {
+    "name": "mercedes E-class",
+    "slug": "sedan-e-class",
+    "class": "sedan",
+    "seats": 2,
+    "pricePerHour": 55,
+    "minHours": 3,
+    "description": "",
+    "images": [
+      "images/vehicles/sedan-e-class/photo_2026-02-25_18-07-31.jpg",
+      "images/vehicles/sedan-e-class/wedding-1.jpg",
+      "images/vehicles/sedan-e-class/wedding-2.jpg"
+    ],
+    "coverIndex": 2,
+    "packages": [
+      {
+        "hours": 3,
+        "price": 150
+      },
+      {
+        "hours": 5,
+        "price": 260
+      },
+      {
+        "hours": 7,
+        "price": 370
+      }
+    ]
+  }
+]

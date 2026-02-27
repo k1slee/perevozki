@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Вход в админ‑панель</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="section">
+    <div class="container" style="max-width:460px">
+      <h1 class="section-title">Вход</h1>
+      <form id="login-form" class="card">
+        <label><span>Логин</span><input id="user" autocomplete="username"></label>
+        <label><span>Пароль</span><input id="pwd" type="password" required></label>
+        <button class="btn btn-primary btn-block" type="submit">Войти</button>
+        <p class="muted">Пароль задаётся в переменной окружения ADMIN_PASSWORD. По умолчанию — admin (только для разработки).</p>
+      </form>
+      <p class="muted"><a href="./">← На сайт</a></p>
+    </div>
+  </main>
+  <script>
+  document.getElementById('login-form').addEventListener('submit',function(e){
+    e.preventDefault()
+    var p=document.getElementById('pwd').value
+    var u=document.getElementById('user').value
+    fetch('/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})})
+      .then(function(r){return r.json().then(function(j){return {ok:r.ok,body:j}})})
+      .then(function(res){
+        if(res.ok){location.href='/admin.html'}
+        else{alert('Неверный пароль')}
+      }).catch(function(){alert('Ошибка сети')})
+  })
+  </script>
+</body>
+</html>
