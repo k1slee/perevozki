@@ -1,3 +1,4 @@
+(function(){try{var t=localStorage.getItem('theme')||'light';if(t!=='festive'){t='light'};if(t==='light'){document.documentElement.removeAttribute('data-theme')}else{document.documentElement.setAttribute('data-theme',t)}}catch(e){}})()
 document.addEventListener('DOMContentLoaded',function(){
   var themeBtns=document.querySelectorAll('.theme-btn')
   function setActive(name){
@@ -9,13 +10,11 @@ document.addEventListener('DOMContentLoaded',function(){
     localStorage.setItem('theme',name)
     setActive(name)
   }
+  var saved=localStorage.getItem('theme')||'light'
+  if(saved!=='festive') saved='light'
   if(themeBtns.length){
-    var saved=localStorage.getItem('theme')||'light'
-    if(saved!=='festive') saved='light'
-    applyTheme(saved)
-    themeBtns.forEach(function(btn){
-      btn.addEventListener('click',function(){applyTheme(btn.dataset.theme)})
-    })
+    setActive(saved)
+    themeBtns.forEach(function(btn){btn.addEventListener('click',function(){applyTheme(btn.dataset.theme)})})
   }
   var toggle=document.querySelector('.nav-toggle')
   var menu=document.getElementById('nav-menu')
