@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Автопарк | Свадебные перевозки</title>
   <script>try{var t=localStorage.getItem('theme')||'light';if(t!=='festive'){t='light'};if(t!=='light'){document.documentElement.setAttribute('data-theme',t)}}catch(e){}</script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
@@ -25,12 +25,7 @@
           <p class="muted" style="margin:0 0 12px">Выберите подходящий класс авто и узнайте стоимость пакета.</p>
           <div class="filters" style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px">
             <input id="flt-q" placeholder="Поиск по названию">
-            <select id="flt-class">
-              <option value="">Все классы</option>
-              <option value="sedan">Седан</option>
-              <option value="minivan">Минивэн</option>
-              <option value="minibus">Микроавтобус</option>
-            </select>
+            <select id="flt-class"><option value="">Все классы</option></select>
             <select id="flt-seats">
               <option value="">Любое число мест</option>
               <option value="2">2+</option>
@@ -58,8 +53,16 @@
         var a=document.createElement('a');a.className='card vehicle';a.href='vehicle.html?slug='+encodeURIComponent(v.slug)
         var img='images/gallery/sedan-1.jpg'
         if(v.images && v.images.length){var ci=(typeof v.coverIndex==='number' && v.coverIndex>=0 && v.coverIndex<v.images.length)?v.coverIndex:0;img=v.images[ci]}
-        var chips='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><span class="chip">'+(v.class||'')+'</span><span class="chip">'+(v.seats||'-')+' мест</span></div>'
-        a.innerHTML='<div class="media" style="aspect-ratio:4/3;border-radius:12px;overflow:hidden;margin-bottom:10px;border:1px solid var(--border)"><img src="'+img+'" alt="'+(v.name||'Авто')+'"></div><h3>'+v.name+'</h3><p class="muted">от '+(v.pricePerHour||'-')+' BYN/час</p>'+chips
+        var media=document.createElement('div');media.className='media';media.style.cssText='aspect-ratio:4/3;border-radius:12px;overflow:hidden;margin-bottom:10px;border:1px solid var(--border);background:var(--panel);display:flex;align-items:center;justify-content:center'
+        var im=document.createElement('img');im.src=img;im.alt=v.name||'Авто';media.appendChild(im)
+        var chips=document.createElement('div');chips.style.cssText='display:flex;gap:8px;flex-wrap:wrap;margin-top:8px'
+        var chip1=document.createElement('span');chip1.className='chip';chip1.textContent=v.class||''
+        var chip2=document.createElement('span');chip2.className='chip';chip2.textContent=(v.seats||'-')+' мест'
+        chips.appendChild(chip1);chips.appendChild(chip2)
+        var h3=document.createElement('h3');h3.textContent=v.name
+        var p=document.createElement('p');p.className='muted';p.textContent='от '+(v.pricePerHour||'-')+' BYN/час'
+        a.appendChild(media);a.appendChild(h3);a.appendChild(p);a.appendChild(chips)
+        im.addEventListener('load',function(){ if(im.naturalWidth && im.naturalHeight && im.naturalHeight>im.naturalWidth){ im.classList.add('portrait') } })
         wrap.appendChild(a)
       })
     }
@@ -75,6 +78,12 @@
       })
       render(list)
     }
+    fetch('/api/classes',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(list){
+      var sel=document.getElementById('flt-class')
+      ;(list||[]).forEach(function(c){
+        var o=document.createElement('option');o.value=c.key;o.textContent=c.title;sel.appendChild(o)
+      })
+    }).catch(function(){})
     fetch('data/vehicles.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(list){data=list||[];render(data)})
     document.addEventListener('input',function(e){
       if(e.target && (e.target.id==='flt-q' || e.target.id==='flt-class' || e.target.id==='flt-seats')) applyFilters()

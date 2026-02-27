@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Админ-панель | Автопарк</title>
   <script>try{var t=localStorage.getItem('theme')||'light';if(t!=='festive'){t='light'};if(t!=='light'){document.documentElement.setAttribute('data-theme',t)}}catch(e){}</script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
@@ -21,7 +21,7 @@
         <h1 class="section-title">Добавить автомобиль</h1>
         <form id="add-form" class="card">
           <div class="row"><label><span>Название</span><input name="name" required></label><label><span>Слаг</span><input name="slug" required placeholder="например: sedan-c-class"></label></div>
-          <div class="row"><label><span>Класс</span><select name="class"><option value="sedan">sedan</option><option value="minivan">minivan</option><option value="minibus">minibus</option></select></label><label><span>Места</span><input type="number" name="seats" min="1" required></label></div>
+          <div class="row"><label><span>Класс</span><select name="class" id="add-class"></select></label><label><span>Места</span><input type="number" name="seats" min="1" required></label></div>
           <div class="row"><label><span>Тариф, BYN/час</span><input type="number" name="pricePerHour" min="0" required></label><label><span>Минимум часов</span><input type="number" name="minHours" min="1" required></label></div>
           <label><span>Описание</span><textarea name="description" rows="3"></textarea></label>
           <label><span>Изображения (URL через запятую)</span><input name="images" placeholder="images/gallery/sedan-1.jpg, images/gallery/wedding-roses.jpg"></label>
@@ -33,6 +33,16 @@
           <button class="btn btn-secondary btn-block" type="submit">Загрузить</button>
           <p class="muted" id="upload-result"></p>
         </form>
+        <h2 class="section-title" style="margin-top:28px">Классы авто</h2>
+        <div class="card" id="classes-card">
+          <div class="row">
+            <label><span>Идентификатор</span><input id="cls-key" placeholder="например: limo"></label>
+            <label><span>Название</span><input id="cls-title" placeholder="например: Лимузин"></label>
+          </div>
+          <div class="row" style="margin-top:8px"><button class="btn btn-primary" id="cls-add">Добавить класс</button></div>
+          <div id="cls-list" class="grid" style="grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px"></div>
+          <p class="muted" id="cls-status"></p>
+        </div>
         <h2 class="section-title" style="margin-top:28px">Текущий автопарк</h2>
         <div id="list" class="grid cards"></div>
         <p><button id="logout" class="btn">Выйти</button></p>
@@ -104,6 +114,42 @@
       container.addEventListener('dragover',function(e){e.preventDefault();var t=e.target.closest('.card');if(!t||t===dragged)return;var rect=t.getBoundingClientRect();var next=(e.clientY-rect.top)/(rect.bottom-rect.top)>0.5;t.parentNode.insertBefore(dragged, next?t.nextSibling:t)})
       container.addEventListener('drop',function(e){e.preventDefault()})
     }
+    var classes=[]
+    function renderClassSelect(select, val){
+      select.innerHTML=''
+      classes.forEach(function(c){
+        var o=document.createElement('option');o.value=c.key;o.textContent=c.title+' ('+c.key+')';select.appendChild(o)
+      })
+      if(val){select.value=val}
+    }
+    function loadClasses(){
+      return fetch('/api/classes',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(list){
+        classes=list||[]
+        var addSel=document.getElementById('add-class')
+        if(addSel) renderClassSelect(addSel, addSel.value|| (classes[0]?classes[0].key:''))
+        var wrap=document.getElementById('cls-list'); wrap.innerHTML=''
+        classes.forEach(function(c){
+          var d=document.createElement('div'); d.className='card'
+          d.innerHTML='<strong>'+c.title+'</strong><p class="muted">'+c.key+'</p><button class="btn" data-del="'+c.key+'">Удалить</button>'
+          d.querySelector('[data-del]').addEventListener('click',function(){
+            if(!confirm('Удалить класс '+c.key+'?')) return
+            fetch('/api/classes/'+encodeURIComponent(c.key),{method:'DELETE'}).then(function(){loadClasses();loadList()})
+          })
+          wrap.appendChild(d)
+        })
+      })
+    }
+    document.getElementById('cls-add').addEventListener('click',function(){
+      var key=document.getElementById('cls-key').value.trim()
+      var title=document.getElementById('cls-title').value.trim()
+      if(!key){document.getElementById('cls-status').textContent='Укажите идентификатор';return}
+      fetch('/api/classes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key:key,title:title||key})})
+        .then(function(r){return r.json().then(function(j){return {ok:r.ok,body:j}})})
+        .then(function(res){
+          if(res.ok){document.getElementById('cls-status').textContent='Класс добавлен'; document.getElementById('cls-key').value=''; document.getElementById('cls-title').value=''; loadClasses(); loadList()}
+          else{document.getElementById('cls-status').textContent='Ошибка: '+(res.body&&res.body.error||'unknown')}
+        })
+    })
     function loadList(){
       fetch('/api/vehicles').then(function(r){return r.json()}).then(function(list){
         var wrap=document.getElementById('list');wrap.innerHTML=''
@@ -111,12 +157,16 @@
           var d=document.createElement('div');d.className='card'
           d.innerHTML='<h3>'+v.name+'</h3><p class="muted">'+v.slug+'</p>'
             +'<div class="row"><label><span>Имя</span><input value="'+v.name+'" data-k="name"></label><label><span>Тариф</span><input value="'+v.pricePerHour+'" data-k="pricePerHour" type="number"></label></div>'
-            +'<div class="row"><label><span>Места</span><input value="'+(v.seats||'')+'" data-k="seats" type="number"></label><label><span>Мин. часы</span><input value="'+(v.minHours||'')+'" data-k="minHours" type="number"></label></div>'
+            +'<div class="row"><label><span>Класс</span><select data-k="class"></select></label><label><span>Места</span><input value="'+(v.seats||'')+'" data-k="seats" type="number"></label></div>'
+            +'<div class="row"><label><span>Мин. часы</span><input value="'+(v.minHours||'')+'" data-k="minHours" type="number"></label></div>'
             +'<label><span>Описание</span><textarea data-k="description">'+(v.description||'')+'</textarea></label>'
             +'<label><span>Пакеты (часы:цена;...)</span><input data-k="packagesText" value="'+serializePackages(v.packages||[])+'"></label>'
             +'<div class="row"><label><span>Добавить фото</span><input type="file" data-files multiple></label></div>'
             +'<div class="grid" style="grid-template-columns:repeat(4,1fr);gap:12px" data-thumbs></div>'
             +'<div class="row" style="margin-top:8px"><button class="btn btn-primary" data-act="save">Сохранить</button><button class="btn" data-act="delete">Удалить</button><a class="btn" href="vehicle.html?slug='+v.slug+'" target="_blank">Открыть</a></div>'
+          // заполнить селект классов
+          var clsSel=d.querySelector('select[data-k="class"]')
+          renderClassSelect(clsSel, v.class||'')
           var thumbs=d.querySelector('[data-thumbs]')
           var imgs=(v.images||[])
           imgs.forEach(function(src,idx){thumbs.appendChild(makeThumb(src, (typeof v.coverIndex==='number'?v.coverIndex:0)===idx))})
@@ -174,7 +224,7 @@
         })
       })
     }
-    loadList()
+    loadClasses().then(loadList)
     document.getElementById('logout').addEventListener('click',function(){
       fetch('/admin/logout',{method:'POST'}).then(function(){location.href='/login.html'})
     })

@@ -69,6 +69,23 @@ document.addEventListener('DOMContentLoaded',function(){
       window.open(link,'_blank','noopener')
     })
   }
+  // Hero cut-out fallback
+  ;(function(){
+    var img=document.getElementById('hero-car'); if(!img) return
+    img.addEventListener('error',function(){
+      fetch('data/vehicles.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(list){
+        if(!Array.isArray(list)||!list.length){ img.style.display='none'; return }
+        var src=null
+        for(var i=0;i<list.length;i++){
+          var v=list[i]; if(v.images&&v.images.length){
+            var ci=(typeof v.coverIndex==='number' && v.coverIndex>=0 && v.coverIndex<v.images.length)?v.coverIndex:0
+            src=v.images[ci]; break
+          }
+        }
+        if(src){ img.src=src; img.classList.add('masked') } else { img.style.display='none' }
+      }).catch(function(){ img.style.display='none' })
+    })
+  })()
   var contact=document.getElementById('contact-form')
   if(contact){
     contact.addEventListener('submit',function(e){

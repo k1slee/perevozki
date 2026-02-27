@@ -10,6 +10,7 @@ DATA_DIR = BASE / "data"
 IMAGES_DIR = BASE / "images" / "vehicles"
 VEHICLES_FILE = DATA_DIR / "vehicles.json"
 GALLERY_FILE = DATA_DIR / "gallery.json"
+CLASSES_FILE = DATA_DIR / "classes.json"
 
 app = Flask(__name__, static_folder=str(BASE), static_url_path="")
 app.secret_key = os.environ.get("SECRET_KEY", "dev-secret")
@@ -50,6 +51,29 @@ def read_gallery():
 def write_gallery(items):
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     with open(GALLERY_FILE, "w", encoding="utf-8") as f:
+        json.dump(items, f, ensure_ascii=False, indent=2)
+
+def read_classes():
+    # Defaults if file missing
+    defaults = [
+        {"key": "sedan", "title": "Седан"},
+        {"key": "minivan", "title": "Минивэн"},
+        {"key": "minibus", "title": "Микроавтобус"},
+    ]
+    if not CLASSES_FILE.exists():
+        return defaults
+    try:
+        with open(CLASSES_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            if isinstance(data, list) and data:
+                return data
+            return defaults
+    except Exception:
+        return defaults
+
+def write_classes(items):
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    with open(CLASSES_FILE, "w", encoding="utf-8") as f:
         json.dump(items, f, ensure_ascii=False, indent=2)
 
 @app.route("/")
@@ -202,6 +226,39 @@ def api_upload_gallery():
         f.save(str(path))
         saved.append(f"images/gallery/{filename}")
     return jsonify({"ok": True, "paths": saved})
+
+@app.get("/api/classes")
+def api_classes_list():
+    return jsonify(read_classes())
+
+@app.post("/api/classes")
+def api_classes_add():
+    guard = require_admin()
+    if guard:
+        return guard
+    data = request.get_json(force=True, silent=True) or {}
+    key = (data.get("key") or "").strip()
+    title = (data.get("title") or "").strip() or key
+    if not key or not all(ch.isalnum() or ch in "-_." for ch in key):
+        return jsonify({"error": "bad_key"}), 400
+    items = read_classes()
+    if any(it.get("key") == key for it in items):
+        return jsonify({"error": "exists"}), 409
+    items.append({"key": key, "title": title})
+    write_classes(items)
+    return jsonify({"ok": True})
+
+@app.delete("/api/classes/<key>")
+def api_classes_delete(key):
+    guard = require_admin()
+    if guard:
+        return guard
+    items = read_classes()
+    new_items = [it for it in items if it.get("key") != key]
+    if len(new_items) == len(items):
+        return jsonify({"error": "not_found"}), 404
+    write_classes(new_items)
+    return jsonify({"ok": True})
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT","8000"))

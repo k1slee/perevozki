@@ -1,0 +1,5 @@
+[
+  { "key": "sedan", "title": "Седан" },
+  { "key": "minivan", "title": "Минивэн" },
+  { "key": "minibus", "title": "Микроавтобус" }
+]
