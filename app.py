@@ -133,12 +133,23 @@ def api_add():
     if guard:
         return guard
     data = request.get_json(force=True, silent=True) or {}
-    required = ["slug","name","class","seats","pricePerHour","minHours"]
+    required = ["slug","name","class","seats"]
     if any(k not in data for k in required):
         return jsonify({"error":"bad_request"}), 400
     items = read_vehicles()
     if any(it.get("slug")==data["slug"] for it in items):
         return jsonify({"error":"slug_exists"}), 409
+    # optional fields
+    if "pricePerHour" in data:
+        try:
+            data["pricePerHour"] = float(data["pricePerHour"])
+        except Exception:
+            data.pop("pricePerHour", None)
+    if "minHours" in data:
+        try:
+            data["minHours"] = int(data["minHours"])
+        except Exception:
+            data.pop("minHours", None)
     data.setdefault("images", [])
     items.append(data)
     write_vehicles(items)

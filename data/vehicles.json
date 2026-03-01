@@ -1,53 +1,116 @@
 [
   {
-    "name": "mercedes E-class",
-    "slug": "sedan-e-class",
-    "class": "sedan",
-    "seats": 2,
-    "pricePerHour": 55,
+    "name": "mercedes-benz sprinter",
+    "slug": "sprinter",
+    "class": "minibus",
+    "seats": 20,
+    "pricePerHour": null,
     "minHours": 3,
     "description": "",
     "images": [
-      "images/vehicles/sedan-e-class/photo_2026-02-25_18-07-31.jpg",
-      "images/vehicles/sedan-e-class/wedding-1.jpg",
-      "images/vehicles/sedan-e-class/wedding-2.jpg"
+      "images/vehicles/sprinter/minibus-interior.jpg",
+      "images/vehicles/sprinter/photo_2026-02-25_18-07-31_2.jpg",
+      "images/vehicles/sprinter/photo_2026-02-25_18-07-31_3.jpg",
+      "images/vehicles/sprinter/photo_2026-02-25_18-07-32.jpg",
+      "images/vehicles/sprinter/photo_2026-02-25_18-07-34_2.jpg",
+      "images/vehicles/sprinter/photo_2026-02-25_18-07-34.jpg"
     ],
     "coverIndex": 2,
-    "packages": [
-      {
-        "hours": 3,
-        "price": 150
-      },
-      {
-        "hours": 5,
-        "price": 260
-      },
-      {
-        "hours": 7,
-        "price": 370
-      }
-    ]
+    "packages": []
   },
   {
-    "name": "mercedes S-class",
-    "slug": "sedan-s-class",
+    "name": "mercedes-benz sprinter",
+    "slug": "sprinter2",
     "class": "sedan",
-    "seats": 2,
-    "pricePerHour": 55,
-    "minHours": 3,
+    "seats": 20,
     "description": "",
     "images": [
-      "images/vehicles/sedan-s-class/photo_2026-02-25_15-50-03.jpg",
-      "images/vehicles/sedan-s-class/photo_2026-02-25_18-07-33_2.jpg",
-      "images/vehicles/sedan-s-class/photo_2026-02-25_18-07-33_3.jpg",
-      "images/vehicles/sedan-s-class/photo_2026-02-25_18-07-34_3.jpg",
-      "images/vehicles/sedan-s-class/photo_2026-02-25_18-07-34_4.jpg",
-      "images/vehicles/sedan-s-class/photo_2026-02-25_18-07-35_2.jpg",
-      "images/vehicles/sedan-s-class/photo_2026-02-25_18-07-35_3.jpg",
-      "images/vehicles/sedan-s-class/photo_2026-02-25_18-07-35.jpg",
-      "images/vehicles/sedan-s-class/wedding-roses.jpg"
+      "images/vehicles/sprinter2/photo_2026-02-28_17-55-03_2.jpg",
+      "images/vehicles/sprinter2/photo_2026-02-28_17-55-03_3.jpg",
+      "images/vehicles/sprinter2/photo_2026-02-28_17-55-03_4.jpg",
+      "images/vehicles/sprinter2/photo_2026-02-28_17-55-03_5.jpg",
+      "images/vehicles/sprinter2/photo_2026-02-28_17-55-03.jpg"
     ],
-    "coverIndex": 5,
+    "coverIndex": 0,
+    "minHours": null,
+    "packages": []
+  },
+  {
+    "name": "audi q5",
+    "slug": "q5",
+    "class": "sedan",
+    "seats": 2,
+    "description": "",
+    "images": [
+      "images/vehicles/q5/photo_2026-02-25_18-07-32_2.jpg",
+      "images/vehicles/q5/photo_2026-02-25_18-07-32_3.jpg"
+    ],
+    "coverIndex": 1,
+    "minHours": null,
+    "packages": []
+  },
+  {
+    "name": "Volkswagen krafter",
+    "slug": "krafter",
+    "class": "minibus",
+    "seats": 20,
+    "description": "",
+    "images": [
+      "images/vehicles/krafter/crafter-open.jpg",
+      "images/vehicles/krafter/crafter-snow.jpg"
+    ],
+    "coverIndex": 0,
+    "minHours": null,
+    "packages": []
+  },
+  {
+    "name": "bmw x5",
+    "slug": "bmwx5",
+    "class": "sedan",
+    "seats": 3,
+    "description": "",
+    "images": [
+      "images/vehicles/bmwx5/photo_2026-02-25_18-07-32_4.jpg",
+      "images/vehicles/bmwx5/photo_2026-02-25_18-07-33.jpg"
+    ],
+    "coverIndex": 0,
+    "minHours": null,
+    "packages": []
+  },
+  {
+    "name": "mercedes-benz w212",
+    "slug": "mercedes w212",
+    "class": "sedan",
+    "seats": 2,
+    "description": "",
+    "images": [
+      "images/vehicles/mercedes w212/photo_2026-02-25_18-07-31.jpg",
+      "images/vehicles/mercedes w212/wedding-1.jpg",
+      "images/vehicles/mercedes w212/wedding-2.jpg"
+    ],
+    "coverIndex": 0,
+    "minHours": null,
+    "packages": []
+  },
+  {
+    "name": "mercedes benz w221",
+    "slug": "mercedes w221",
+    "class": "sedan",
+    "seats": 2,
+    "description": "",
+    "images": [
+      "images/vehicles/mercedes w221/photo_2026-02-25_15-50-03.jpg",
+      "images/vehicles/mercedes w221/photo_2026-02-25_18-07-33_2.jpg",
+      "images/vehicles/mercedes w221/photo_2026-02-25_18-07-33_3.jpg",
+      "images/vehicles/mercedes w221/photo_2026-02-25_18-07-34_3.jpg",
+      "images/vehicles/mercedes w221/photo_2026-02-25_18-07-34_4.jpg",
+      "images/vehicles/mercedes w221/photo_2026-02-25_18-07-35_2.jpg",
+      "images/vehicles/mercedes w221/photo_2026-02-25_18-07-35_3.jpg",
+      "images/vehicles/mercedes w221/photo_2026-02-25_18-07-35.jpg",
+      "images/vehicles/mercedes w221/wedding-roses.jpg"
+    ],
+    "coverIndex": 8,
+    "minHours": null,
     "packages": []
   }
 ]

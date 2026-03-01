@@ -145,8 +145,24 @@ output{min-width:140px;height:44px;display:inline-flex;align-items:center;justif
   width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .25s ease
 }
 .gallery-item.loaded img{opacity:1}
-.v-hero img{width:100%;height:420px;object-fit:cover;background:var(--panel)}
+.v-hero{position:relative;height:420px;display:flex;align-items:center;justify-content:center;background:var(--panel);overflow:hidden}
+.v-hero img{max-width:100%;max-height:100%;object-fit:contain;background:var(--panel);transform:scale(1);transition:transform .35s ease, filter .35s ease}
 .v-hero img.portrait{object-fit:contain}
+.v-hero:hover img{transform:scale(1.03);filter:saturate(1.04)}
+.v-hero .badges{position:absolute;left:14px;bottom:14px;display:flex;gap:8px;flex-wrap:wrap;background:rgba(255,255,255,.6);backdrop-filter:blur(6px);padding:8px 10px;border:1px solid var(--border);border-radius:12px}
+.v-hero-gloss{position:absolute;inset:0;background:radial-gradient(70% 60% at 50% 100%, rgba(0,0,0,.12), transparent 70%), linear-gradient(0deg, rgba(255,255,255,.25), transparent 40%);pointer-events:none}
+.v-header{min-height:280px;background-size:cover;background-position:center;border-radius:var(--radius);border:1px solid var(--border);background-blend-mode:normal}
+.v-header-inner{min-height:280px;display:flex;flex-direction:column;justify-content:flex-end;padding:18px}
+.v-layout{display:grid;grid-template-columns:1.3fr .9fr;gap:16px;margin-top:16px}
+.v-gallery{padding:12px;border-radius:var(--radius);border:1px solid var(--border);background:var(--card)}
+.v-gallery-main{aspect-ratio:16/9;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:var(--panel);display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.v-gallery-main img{max-width:100%;max-height:100%;object-fit:contain;cursor:zoom-in;transition:transform .25s ease, filter .25s ease}
+.v-gallery-main:hover img{transform:scale(1.02);filter:saturate(1.04)}
+.v-thumbs{display:grid;grid-auto-flow:column;grid-auto-columns:108px;gap:10px;overflow-x:auto;padding-bottom:6px}
+.v-thumb{border:1px solid var(--border);border-radius:10px;padding:0;height:68px;overflow:hidden;background:var(--panel);cursor:pointer;transition:transform .15s ease, box-shadow .15s ease}
+.v-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.v-thumb.active{outline:2px solid var(--brand)}
+.v-info .card{margin-bottom:10px}
 .lightbox{
   position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:60
 }
@@ -205,4 +221,5 @@ output{min-width:140px;height:44px;display:inline-flex;align-items:center;justif
   .gallery-grid{grid-template-columns:repeat(2,1fr)}
   .row{grid-template-columns:1fr}
   .contacts{grid-template-columns:1fr}
+  .v-layout{grid-template-columns:1fr}
 }

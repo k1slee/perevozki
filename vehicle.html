@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Автомобиль | Свадебные перевозки</title>
+  <title>Автомобиль | Аренда микроавтобусов и минивэнов</title>
   <script>try{var t=localStorage.getItem('theme')||'light';if(t!=='festive'){t='light'};if(t!=='light'){document.documentElement.setAttribute('data-theme',t)}}catch(e){}</script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./styles.css">
@@ -19,14 +19,27 @@
   <main>
     <section class="section">
       <div class="container">
-        <div id="v-hero" class="card" style="padding:0;overflow:hidden"></div>
-        <h1 id="v-name" class="section-title" style="margin-top:16px"></h1>
-        <p id="v-desc" class="muted"></p>
-        <div id="v-specs" class="grid cards" style="margin-top:12px"></div>
-        <h2 class="section-title" style="margin-top:28px">Пакеты</h2>
-        <div id="v-packages" class="grid cards"></div>
-        <h2 class="section-title" style="margin-top:28px">Фотографии</h2>
-        <div id="v-gallery" class="gallery-grid"></div>
+        <div class="v-layout">
+          <div>
+            <div class="v-gallery card">
+              <div class="v-gallery-main"><img id="v-main-img" alt=""></div>
+              <div id="v-thumbs" class="v-thumbs"></div>
+            </div>
+          </div>
+          <aside class="v-info">
+            <h1 id="v-name" class="section-title" style="margin-top:0"></h1>
+            <p id="v-desc" class="muted"></p>
+          </aside>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <h2 class="section-title" style="margin:0 0 10px">Заказ и связь</h2>
+          <div class="hero-ctas" style="margin-top:6px">
+            <a class="btn btn-primary" href="tel:+375291234567">Позвонить</a>
+            <a class="btn btn-outline" href="https://wa.me/375291234567" target="_blank" rel="noopener">WhatsApp</a>
+            <a class="btn btn-outline" href="https://t.me/share/url?url=&text=Хочу%20заказать%20поездку" target="_blank" rel="noopener">Telegram</a>
+          </div>
+          <p class="muted" style="margin-top:6px">Работаем 24/7. Сообщите дату, маршрут и количество пассажиров — подберём оптимальный вариант.</p>
+        </div>
       </div>
     </section>
   </main>
@@ -39,53 +52,46 @@
     fetch('api/vehicles/'+encodeURIComponent(slug)).then(function(r){return r.ok?r.json():fetch('data/vehicles.json',{cache:'no-cache'}).then(function(x){return x.json()}).then(function(list){return list.find(function(i){return i.slug===slug})||{}})}).then(function(v){
       if(!v||!v.slug){location.href='fleet.html';return}
       document.title=v.name+' | Автопарк'
-      var hero=document.getElementById('v-hero')
-      var img=''
-      if(v.images&&v.images.length){
-        var ci=(typeof v.coverIndex==='number' && v.coverIndex>=0 && v.coverIndex<v.images.length)?v.coverIndex:0
-        img=v.images[ci]
+      var nameEl=document.getElementById('v-name'); nameEl.textContent=v.name
+      var desc=document.getElementById('v-desc')
+      var autoDesc=(function(){
+        var t=(v.class==='minibus'?'Комфортный микроавтобус':'Автомобиль')
+        var s=(v.seats?(' на '+v.seats+' мест'):'')
+        return t+s+' для экскурсий, корпоративных поездок и свадеб. Чистый салон, кондиционер, аккуратный водитель. Подача вовремя, бережное отношение к багажу.'
+      })()
+      desc.textContent=(v.description&&v.description.trim())?v.description:autoDesc
+      var main=document.getElementById('v-main-img')
+      var thumbs=document.getElementById('v-thumbs')
+      var imgs=(v.images||[]).slice()
+      if(imgs.length){
+        var ci=(typeof v.coverIndex==='number'&&v.coverIndex>=0&&v.coverIndex<imgs.length)?v.coverIndex:0
+        var cover=imgs[ci]; imgs=[cover].concat(imgs.filter(function(s,idx){return idx!==ci}))
       }
-      hero.className='v-hero card'
-      hero.innerHTML=img?'<img src="'+img+'" alt="'+v.name+'">':''
-      var hi=hero.querySelector('img')
-      if(hi){
-        if(hi.complete){ if(hi.naturalHeight>hi.naturalWidth) hi.classList.add('portrait') }
-        else{ hi.addEventListener('load',function(){ if(hi.naturalHeight>hi.naturalWidth) hi.classList.add('portrait') }) }
-      }
-      document.getElementById('v-name').textContent=v.name
-      document.getElementById('v-desc').textContent=v.description||''
-      var specs=document.getElementById('v-specs')
-      specs.innerHTML='<div class="card"><strong>'+ (v.class||'') +'</strong><p class="muted">Класс</p></div><div class="card"><strong>'+ (v.seats||'-') +'</strong><p class="muted">Места</p></div><div class="card"><strong>'+ (v.pricePerHour||'-') +' BYN/час</strong><p class="muted">Тариф</p></div><div class="card"><strong>'+ (v.minHours||'-') +' ч</strong><p class="muted">Минимум</p></div>'
-      var pk=document.getElementById('v-packages')
-      if(Array.isArray(v.packages)&&v.packages.length){
-        v.packages.forEach(function(p){
-          var d=document.createElement('div');d.className='card'
-          d.innerHTML='<h3>'+p.hours+' ч</h3><p class="price"><strong>'+p.price+' BYN</strong></p><p class="muted">Финальная цена может зависеть от маршрута и ожиданий</p>'
-          pk.appendChild(d)
+      function setMain(src){main.src=src}
+      if(imgs[0]) setMain(imgs[0])
+      imgs.forEach(function(src,i){
+        var b=document.createElement('button'); b.className='v-thumb'; b.type='button'
+        var im=document.createElement('img'); im.src=src; im.alt=v.name; b.appendChild(im)
+        if(i===0) b.classList.add('active')
+        b.addEventListener('click',function(){
+          [].slice.call(thumbs.children).forEach(function(x){x.classList.remove('active')}); b.classList.add('active'); setMain(src)
         })
-      } else {
-        pk.innerHTML='<div class="card"><p class="muted">Пакеты уточняйте при бронировании</p></div>'
-      }
-      var gal=document.getElementById('v-gallery')
-      var order=(v.images||[]).slice()
-      if(order.length){
-        var ci=(typeof v.coverIndex==='number' && v.coverIndex>=0 && v.coverIndex<order.length)?v.coverIndex:0
-        var cover=order[ci]; order=[cover].concat(order.filter(function(s,idx){return idx!==ci}))
-      }
-      order.forEach(function(src){
-        var f=document.createElement('figure');f.className='gallery-item'
-        var i=new Image(); i.src=src; i.alt=v.name
-        function mark(){ f.classList.add('loaded') }
-        if(i.complete && i.naturalWidth>0){ mark() } else { i.addEventListener('load',mark,{once:true}) }
-        i.addEventListener('error',function(){ f.style.display='none' },{once:true})
-        f.appendChild(i); gal.appendChild(f)
+        thumbs.appendChild(b)
       })
-      var lb=document.getElementById('lightbox'),lbImg=lb.querySelector('.lightbox-img'),prev=lb.querySelector('.lightbox-prev'),next=lb.querySelector('.lightbox-next'),close=lb.querySelector('.lightbox-close'),imgs=[].slice.call(gal.querySelectorAll('img'));var cur=-1
-      function open(i){cur=i;lbImg.src=imgs[i].src;lb.classList.add('open');lb.setAttribute('aria-hidden','false')}
+      var lb=document.getElementById('lightbox'),lbImg=lb.querySelector('.lightbox-img'),prev=lb.querySelector('.lightbox-prev'),next=lb.querySelector('.lightbox-next'),close=lb.querySelector('.lightbox-close');var cur=0
+      function open(){lbImg.src=main.src;lb.classList.add('open');lb.setAttribute('aria-hidden','false')}
       function hide(){lb.classList.remove('open');lb.setAttribute('aria-hidden','true')}
-      function show(d){if(!imgs.length)return;cur=(cur+d+imgs.length)%imgs.length;lbImg.src=imgs[cur].src}
-      imgs.forEach(function(im,i){im.addEventListener('click',function(){open(i)})})
-      close.addEventListener('click',hide);prev.addEventListener('click',function(){show(-1)});next.addEventListener('click',function(){show(1)});lb.addEventListener('click',function(e){if(e.target===lb)hide()});document.addEventListener('keydown',function(e){if(!lb.classList.contains('open'))return;if(e.key==='Escape')hide();if(e.key==='ArrowRight')show(1);if(e.key==='ArrowLeft')show(-1)})
+      function show(d){
+        var arr=[].slice.call(thumbs.querySelectorAll('img')).map(function(i){return i.src})
+        if(!arr.length)return
+        cur=(cur+d+arr.length)%arr.length
+        lbImg.src=arr[cur]
+      }
+      main.addEventListener('click',open)
+      close.addEventListener('click',hide)
+      prev.addEventListener('click',function(){show(-1)})
+      next.addEventListener('click',function(){show(1)})
+      document.addEventListener('keydown',function(e){if(!lb.classList.contains('open'))return;if(e.key==='Escape')hide();if(e.key==='ArrowRight')show(1);if(e.key==='ArrowLeft')show(-1)})
     })
   })()
   </script>
