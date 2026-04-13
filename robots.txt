@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
 
+Host: grodnotrip.online
 Sitemap: https://grodnotrip.online/sitemap.xml
+
+User-agent: Yandex
+Allow: /
+Clean-param: utm_source&utm_medium&utm_campaign&utm_term&utm_content /
