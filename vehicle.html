@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Автомобиль | Аренда микроавтобусов и минивэнов</title>
-  <meta name="description" content="Автомобили и микроавтобусы для пассажирских перевозок в Гродно: свадьбы, корпоративы, межгород, аэропорт.">
-  <meta name="keywords" content="автомобиль, микроавтобус, пассажирские перевозки Гродно, свадьба, корпоратив, межгород, аэропорт">
-  <meta name="robots" content="index,follow">
-  <meta property="og:title" content="Автомобиль — пассажирские перевозки в Гродно">
-  <meta property="og:description" content="Комфортные авто для свадеб, корпоративов, межгорода и аэропорта.">
+  <title>Автомобиль GrodnoTrip — аренда микроавтобусов и авто в Гродно</title>
+  <meta name="description" content="GrodnoTrip — аренда микроавтобусов и автомобилей в Гродно для экскурсий, свадеб, трансферов и межгорода.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://grodnotrip.online/vehicle.html">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="images/gallery/wedding-roses.jpg">
-  <meta property="og:url" content="/vehicle.html">
+  <meta property="og:title" content="Автомобиль GrodnoTrip">
+  <meta property="og:description" content="Страница автомобиля GrodnoTrip с фото и описанием.">
+  <meta property="og:url" content="https://grodnotrip.online/vehicle.html">
+  <meta property="og:image" content="https://grodnotrip.online/images/hero/minibus-hero.jpg">
   <script>try{var t=localStorage.getItem('theme')||'light';if(t!=='festive'){t='light'};if(t!=='light'){document.documentElement.setAttribute('data-theme',t)}}catch(e){}</script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./styles.css">
@@ -19,7 +19,7 @@
 <body>
   <header class="header">
     <div class="container header-inner">
-      <a href="./" class="logo"><svg width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M3 13h2l1 4h12l1-4h2l-2 7H5zM7 13l3-7h4l3 7z"/></svg><span>Перевозки</span></a>
+      <a href="./" class="logo"><svg width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M3 13h2l1 4h12l1-4h2l-2 7H5zM7 13l3-7h4l3 7z"/></svg><span>GrodnoTrip</span></a>
       <nav class="nav"><button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">Меню</button><ul id="nav-menu" class="nav-menu"><li><a href="./fleet.html">Автопарк</a></li><li><a href="./#gallery">Галерея</a></li><li><a href="./#contacts">Контакты</a></li></ul></nav>
       <a class="btn btn-primary tel-cta" href="tel:+375291234567">+375 (29) 123-45-67</a>
     </div>
@@ -59,7 +59,7 @@
     if(!slug){location.href='fleet.html';return}
     fetch('api/vehicles/'+encodeURIComponent(slug)).then(function(r){return r.ok?r.json():fetch('data/vehicles.json',{cache:'no-cache'}).then(function(x){return x.json()}).then(function(list){return list.find(function(i){return i.slug===slug})||{}})}).then(function(v){
       if(!v||!v.slug){location.href='fleet.html';return}
-      document.title=v.name+' | Автопарк'
+      document.title=v.name+' | GrodnoTrip'
       var nameEl=document.getElementById('v-name'); nameEl.textContent=v.name
       var desc=document.getElementById('v-desc')
       var autoDesc=(function(){
@@ -68,6 +68,17 @@
         return t+s+' для экскурсий, корпоративных поездок и свадеб. Чистый салон, кондиционер, аккуратный водитель. Подача вовремя, бережное отношение к багажу.'
       })()
       desc.textContent=(v.description&&v.description.trim())?v.description:autoDesc
+      var metaDesc=document.querySelector('meta[name="description"]')
+      if(metaDesc) metaDesc.setAttribute('content',v.name+' — '+desc.textContent)
+      var ogTitle=document.querySelector('meta[property="og:title"]')
+      if(ogTitle) ogTitle.setAttribute('content',v.name+' | GrodnoTrip')
+      var ogDesc=document.querySelector('meta[property="og:description"]')
+      if(ogDesc) ogDesc.setAttribute('content',desc.textContent)
+      var canonical=document.querySelector('link[rel="canonical"]')
+      var canonicalUrl='https://grodnotrip.online/vehicle.html?slug='+encodeURIComponent(v.slug)
+      if(canonical) canonical.setAttribute('href',canonicalUrl)
+      var ogUrl=document.querySelector('meta[property="og:url"]')
+      if(ogUrl) ogUrl.setAttribute('content',canonicalUrl)
       var main=document.getElementById('v-main-img')
       var thumbs=document.getElementById('v-thumbs')
       var imgs=(v.images||[]).slice()
@@ -77,6 +88,8 @@
       }
       function setMain(src){main.src=src}
       if(imgs[0]) setMain(imgs[0])
+      var ogImage=document.querySelector('meta[property="og:image"]')
+      if(ogImage&&imgs[0]) ogImage.setAttribute('content','https://grodnotrip.online/'+imgs[0].replace(/^\.?\//,''))
       imgs.forEach(function(src,i){
         var b=document.createElement('button'); b.className='v-thumb'; b.type='button'
         var im=document.createElement('img'); im.src=src; im.alt=v.name; b.appendChild(im)

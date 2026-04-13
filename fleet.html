@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Автопарк | Аренда микроавтобусов и минивэнов</title>
-  <meta name="description" content="Наш автопарк: минивэны и микроавтобусы для пассажирских перевозок в Гродно. Свадьбы, корпоративы, межгород, аэропорт.">
-  <meta name="keywords" content="автопарк Гродно, пассажирские перевозки, минивэн, микроавтобус, свадьба, корпоратив, межгород, аэропорт">
-  <meta name="robots" content="index,follow">
-  <meta property="og:title" content="Автопарк — пассажирские перевозки в Гродно">
-  <meta property="og:description" content="Комфортные минивэны и микроавтобусы для свадеб, корпоративов, межгорода и аэропорта.">
+  <title>Автопарк GrodnoTrip — микроавтобусы и автомобили в аренду</title>
+  <meta name="description" content="Автопарк GrodnoTrip: микроавтобусы и автомобили для экскурсий, свадеб, трансферов и межгорода в Гродно.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://grodnotrip.online/fleet.html">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="images/gallery/wedding-roses.jpg">
-  <meta property="og:url" content="/fleet.html">
+  <meta property="og:title" content="Автопарк GrodnoTrip">
+  <meta property="og:description" content="Выберите микроавтобус или автомобиль для поездки по Гродно, Беларуси и межгороду.">
+  <meta property="og:url" content="https://grodnotrip.online/fleet.html">
+  <meta property="og:image" content="https://grodnotrip.online/images/hero/minibus-hero.jpg">
   <script>try{var t=localStorage.getItem('theme')||'light';if(t!=='festive'){t='light'};if(t!=='light'){document.documentElement.setAttribute('data-theme',t)}}catch(e){}</script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./styles.css">
@@ -19,7 +19,7 @@
 <body>
   <header class="header">
     <div class="container header-inner">
-      <a href="./" class="logo"><svg width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M3 13h2l1 4h12l1-4h2l-2 7H5zM7 13l3-7h4l3 7z"/></svg><span>Перевозки</span></a>
+      <a href="./" class="logo"><svg width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M3 13h2l1 4h12l1-4h2l-2 7H5zM7 13l3-7h4l3 7z"/></svg><span>GrodnoTrip</span></a>
       <nav class="nav"><button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">Меню</button><ul id="nav-menu" class="nav-menu"><li><a href="./#services">Услуги</a></li><li><a href="./#gallery">Галерея</a></li><li><a href="./#contacts">Контакты</a></li></ul></nav>
       <div class="theme-switch" aria-label="Выбор темы"><button class="theme-btn" data-theme="light">Светлый</button><button class="theme-btn" data-theme="festive">Праздничный</button></div>
       <a class="btn btn-primary tel-cta" href="tel:+375291234567">+375 (29) 123-45-67</a>
@@ -29,8 +29,8 @@
     <section class="section alt">
       <div class="container">
         <div class="card" style="padding:24px;background:linear-gradient(135deg,var(--accent-1-soft),transparent),var(--card)">
-          <h1 class="section-title" style="margin:0 0 6px">Наш автопарк</h1>
-          <p class="muted" style="margin:0 0 12px">Выберите подходящий класс авто и узнайте стоимость пакета.</p>
+          <h1 class="section-title" style="margin:0 0 6px">Автопарк GrodnoTrip</h1>
+          <p class="muted" style="margin:0 0 12px">Выберите подходящий микроавтобус или автомобиль для экскурсии, свадьбы, трансфера или поездки по межгороду.</p>
           <div class="filters" style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px">
             <input id="flt-q" placeholder="Поиск по названию">
             <select id="flt-class"><option value="">Все классы</option></select>
@@ -86,7 +86,13 @@
       })
       render(list)
     }
-    fetch('/api/classes',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(list){
+    function load(url){
+      return fetch(url,{cache:'no-cache'}).then(function(r){
+        if(!r.ok) throw new Error('classes_load_failed')
+        return r.json()
+      })
+    }
+    load('/api/classes').catch(function(){return load('data/classes.json')}).then(function(list){
       var sel=document.getElementById('flt-class')
       ;(list||[]).forEach(function(c){
         var o=document.createElement('option');o.value=c.key;o.textContent=c.title;sel.appendChild(o)
