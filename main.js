@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded',function(){
         ', пассажиров: '+(data.get('passengers')||'1')+
         ', класс: '+(data.get('class')||'sedan')+
         ', часы: '+(data.get('hours')||'') 
-      var phone='+375291234567'
+      var phone='+375295869744'
       var link='https://wa.me/'+phone.replace(/\D/g,'')+'?text='+encodeURIComponent(text)
       window.open(link,'_blank','noopener')
     })
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded',function(){
       var text='Вопрос от '+(d.get('name')||'без имени')+
         ', телефон: '+(d.get('phone')||'')+
         '. '+(d.get('message')||'')
-      var phone='+375291234567'
+      var phone='+375295869744'
       var link='https://wa.me/'+phone.replace(/\D/g,'')+'?text='+encodeURIComponent(text)
       window.open(link,'_blank','noopener')
     })
