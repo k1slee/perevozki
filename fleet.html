@@ -16,6 +16,7 @@
   <script>try{var t=localStorage.getItem('theme')||'light';if(t!=='festive'){t='light'};if(t!=='light'){document.documentElement.setAttribute('data-theme',t)}}catch(e){}</script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./styles.css">
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
 </head>
 <body>
   <header class="header">
@@ -99,7 +100,18 @@
         var o=document.createElement('option');o.value=c.key;o.textContent=c.title;sel.appendChild(o)
       })
     }).catch(function(){})
-    fetch('data/vehicles.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(list){data=list||[];render(data)})
+    function loadJson(url){
+      return fetch(url,{cache:'no-cache'}).then(function(r){
+        if(!r.ok) throw new Error('load_failed:'+url)
+        return r.json()
+      })
+    }
+    loadJson('/api/vehicles').catch(function(){ return loadJson('data/vehicles.json') }).then(function(list){
+      data=list||[]
+      render(data)
+    }).catch(function(){
+      wrap.innerHTML='<div class="card"><h3>Автопарк временно недоступен</h3><p class="muted">Не удалось загрузить список автомобилей. Попробуйте обновить страницу.</p></div>'
+    })
     document.addEventListener('input',function(e){
       if(e.target && (e.target.id==='flt-q' || e.target.id==='flt-class' || e.target.id==='flt-seats')) applyFilters()
     })
