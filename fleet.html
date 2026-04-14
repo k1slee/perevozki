@@ -16,7 +16,10 @@
   <script>try{var t=localStorage.getItem('theme')||'light';if(t!=='festive'){t='light'};if(t!=='light'){document.documentElement.setAttribute('data-theme',t)}}catch(e){}</script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./styles.css">
-  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
 </head>
 <body>
   <header class="header">
@@ -57,7 +60,30 @@
   ;(function(){
     var data=[]
     var wrap=document.getElementById('fleet-list')
+    function getJson(url){
+      if(window.fetch){
+        return fetch(url,{cache:'no-cache'}).then(function(r){
+          if(!r.ok) throw new Error('load_failed:'+url)
+          return r.json()
+        })
+      }
+      return new Promise(function(resolve,reject){
+        var x=new XMLHttpRequest()
+        x.open('GET',url,true)
+        x.setRequestHeader('Cache-Control','no-cache')
+        x.onreadystatechange=function(){
+          if(x.readyState!==4) return
+          if(x.status>=200 && x.status<300){
+            try{ resolve(JSON.parse(x.responseText)) }catch(e){ reject(e) }
+          }else{
+            reject(new Error('load_failed:'+url))
+          }
+        }
+        x.send(null)
+      })
+    }
     function render(list){
+      if(!wrap) return
       wrap.innerHTML=''
       list.forEach(function(v){
         var a=document.createElement('a');a.className='card vehicle';a.href='vehicle.html?slug='+encodeURIComponent(v.slug)
@@ -88,29 +114,17 @@
       })
       render(list)
     }
-    function load(url){
-      return fetch(url,{cache:'no-cache'}).then(function(r){
-        if(!r.ok) throw new Error('classes_load_failed')
-        return r.json()
-      })
-    }
-    load('/api/classes').catch(function(){return load('data/classes.json')}).then(function(list){
+    getJson('data/classes.json').catch(function(){return getJson('/api/classes')}).then(function(list){
       var sel=document.getElementById('flt-class')
       ;(list||[]).forEach(function(c){
         var o=document.createElement('option');o.value=c.key;o.textContent=c.title;sel.appendChild(o)
       })
     }).catch(function(){})
-    function loadJson(url){
-      return fetch(url,{cache:'no-cache'}).then(function(r){
-        if(!r.ok) throw new Error('load_failed:'+url)
-        return r.json()
-      })
-    }
-    loadJson('/api/vehicles').catch(function(){ return loadJson('data/vehicles.json') }).then(function(list){
+    getJson('data/vehicles.json').catch(function(){ return getJson('/api/vehicles') }).then(function(list){
       data=list||[]
       render(data)
     }).catch(function(){
-      wrap.innerHTML='<div class="card"><h3>Автопарк временно недоступен</h3><p class="muted">Не удалось загрузить список автомобилей. Попробуйте обновить страницу.</p></div>'
+      if(wrap) wrap.innerHTML='<div class="card"><h3>Автопарк временно недоступен</h3><p class="muted">Не удалось загрузить список автомобилей. Попробуйте обновить страницу.</p></div>'
     })
     document.addEventListener('input',function(e){
       if(e.target && (e.target.id==='flt-q' || e.target.id==='flt-class' || e.target.id==='flt-seats')) applyFilters()
