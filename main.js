@@ -112,21 +112,25 @@ document.addEventListener('DOMContentLoaded',function(){
     function bind(){
       var imgs=[].slice.call(document.querySelectorAll('.gallery-item img'));
       imgs.forEach(function(img){
-        var src=img.getAttribute('data-src'); if(src && !img.src) img.src=src;
         if(!img.dataset.lbBound){
           img.dataset.lbBound='1'
           img.addEventListener('load',function(){
             var p=img.closest('.gallery-item'); if(p){ p.classList.add('loaded'); }
-          });
+          })
           img.addEventListener('error',function(){
             var p=img.closest('.gallery-item'); if(p){ p.style.display='none'; }
-          });
+          })
           img.addEventListener('click',function(){
             var list=[].slice.call(document.querySelectorAll('.gallery-item img')).filter(function(x){return x.src})
             state.list=list
             var idx=list.indexOf(img)
             if(idx>=0) openAt(idx)
           })
+        }
+        var src=img.getAttribute('data-src')
+        if(src && !img.getAttribute('src')) img.setAttribute('src',src)
+        if(img.complete && img.naturalWidth){
+          var p=img.closest('.gallery-item'); if(p){ p.classList.add('loaded'); }
         }
       })
       state.list=[].slice.call(document.querySelectorAll('.gallery-item img')).filter(function(x){return x.src})
